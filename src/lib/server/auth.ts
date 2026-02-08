@@ -18,7 +18,7 @@ export async function setJwt(cookies: Cookies, token: string) {
 }
 
 export function getJwt(cookies: Cookies) {
-	const raw = cookies.get('token');
+	const raw = cookies.get('usertoken');
 	if (!raw) return null;
 	return raw
 }
