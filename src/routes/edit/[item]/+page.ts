@@ -9,9 +9,6 @@ export async function load({ params }) {
     const selectedItem = routeMapper[params.item as keyof typeof routeMapper]
     const res = await fetch(selectedItem.api_url);
 	const payload = await res.json();
-    console.log(payload)
-
-
 
 	return {
 		selectedItem: selectedItem,
