@@ -2,6 +2,11 @@ import { type Cookies } from '@sveltejs/kit';
 
 const jwtExpires = 60 * 60 * 24 * 14; // 14 days
 
+export async function clearAuthCookies(cookies: Cookies) {
+	cookies.delete("token", {path:"/"})
+	cookies.delete("userData", {path:"/"})
+}
+
 export async function setJwt(cookies: Cookies, token: string) {
 	cookies.set('token', token, {
 		path: '/',
@@ -15,11 +20,7 @@ export async function setJwt(cookies: Cookies, token: string) {
 export function getJwt(cookies: Cookies) {
 	const raw = cookies.get('token');
 	if (!raw) return null;
-	try {
-		return JSON.parse(raw);
-	} catch {
-		return null;
-	}
+	return raw
 }
 
 export function setUserDataCookie(cookies: Cookies, userData: Record<string, unknown>) {
