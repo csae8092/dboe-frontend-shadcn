@@ -1,13 +1,36 @@
+import { appConfig } from '$lib/constants.js';
+
+import { redirect, fail } from '@sveltejs/kit';
+
 export const actions = {
 	default: async ({ cookies, request }) => {
 		const data = await request.formData();
 		const username = data.get('username');
 		const password = data.get('password');
-		console.log(request)
-		console.log(username, password )
+		console.log(appConfig.auth_url, username, password);
 
-		cookies.set('sessionid', "foobar", { path: '/' });
+		const response = await fetch(appConfig.auth_url, {
+			method: 'POST',
+			headers: {
+				accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				username,
+				password
+			})
+		});
 
-		return { success: true };
+		if (response.ok) {
+			const res = await response.json();
+			console.log(res.token);
+			throw redirect(303, '/');
+		} else {
+			return fail(
+				400, {
+					message: `Password for user ${username} did not match`
+				}
+			)
+		}
 	}
 };
