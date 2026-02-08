@@ -2,14 +2,19 @@ import { routeMapper } from '$lib/constants.js';
 import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageLoad} */
-export function load({ params }) {
+export async function load({ params }) {
 	if (!(params.item in routeMapper)) {
 		throw error(404, 'Not found');
 	}
+    const selectedItem = routeMapper[params.item as keyof typeof routeMapper]
+    const res = await fetch(selectedItem.api_url);
+	const payload = await res.json();
+    console.log(payload)
+
+
+
 	return {
-		post: {
-			title: `Title for ${params.item} goes here`,
-			content: `Content for ${params.item} goes here`
-		}
+		selectedItem: selectedItem,
+        payload: payload
 	};
 }

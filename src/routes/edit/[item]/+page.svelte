@@ -1,6 +1,10 @@
 <script lang="ts">
-    const { data, params } = $props()
+    const { data } = $props()
 </script>
 
-<h1>{params.item}</h1>
-<h2>{data.username}</h2>
+<h1>{data.selectedItem.label}</h1>
+
+{#each data.payload.results as x }
+<div>{x}</div>
+    
+{/each}
