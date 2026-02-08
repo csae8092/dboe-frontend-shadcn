@@ -1,6 +1,7 @@
 import { appConfig } from '$lib/constants.js';
 
 import { redirect, fail } from '@sveltejs/kit';
+import { setJwt, setUserDataCookie } from '$lib/server/auth.js';
 
 export const actions = {
 	default: async ({ cookies, request }) => {
@@ -24,13 +25,13 @@ export const actions = {
 		if (response.ok) {
 			const res = await response.json();
 			console.log(res.token);
+			setJwt(cookies, res.token);
+			setUserDataCookie(cookies, { username: username });
 			throw redirect(303, '/');
 		} else {
-			return fail(
-				400, {
-					message: `Password for user ${username} did not match`
-				}
-			)
+			return fail(400, {
+				message: `Password for user ${username} did not match`
+			});
 		}
 	}
 };
