@@ -25,7 +25,13 @@
 			</div>
 			<div
 				class="flex flex-1 items-center gap-8 font-medium text-muted-foreground max-md:hidden lg:gap-16"
-			></div>
+			>
+				{#each Object.entries(data.routeMapper) as [key, value] (key)}
+					<a href={value.href} class="hover:text-primary">
+						<div class="flex gap-1">{value.label}</div>
+					</a>
+				{/each}
+			</div>
 
 			<div class="flex items-center gap-6">
 				<MyDarkmodeToggle></MyDarkmodeToggle>
@@ -40,11 +46,13 @@
 						{/snippet}
 					</DropdownMenu.Trigger>
 					<DropdownMenu.Content>
-						<DropdownMenu.Item>
-							<a href="/foo">
-								<div class="flex gap-1">bar</div>
-							</a>
-						</DropdownMenu.Item>
+						{#each Object.entries(data.routeMapper) as [key, value]}
+							<DropdownMenu.Item>
+								<a href={value.href}>
+									{value.label}
+								</a>
+							</DropdownMenu.Item>
+						{/each}
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>
 			</div>
