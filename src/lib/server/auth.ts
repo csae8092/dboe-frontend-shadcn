@@ -3,12 +3,12 @@ import { type Cookies } from '@sveltejs/kit';
 const jwtExpires = 60 * 60 * 24 * 14; // 14 days
 
 export async function clearAuthCookies(cookies: Cookies) {
-	cookies.delete("token", {path:"/"})
-	cookies.delete("userData", {path:"/"})
+	cookies.delete("usertoken", {path:"/"})
+	cookies.delete("username", {path:"/"})
 }
 
 export async function setJwt(cookies: Cookies, token: string) {
-	cookies.set('token', token, {
+	cookies.set('usertoken', token, {
 		path: '/',
 		sameSite: 'lax',
 		secure: true,
@@ -23,8 +23,8 @@ export function getJwt(cookies: Cookies) {
 	return raw
 }
 
-export function setUserDataCookie(cookies: Cookies, userData: Record<string, unknown>) {
-	cookies.set('userData', JSON.stringify(userData), {
+export function setUserName(cookies: Cookies, username: string) {
+	cookies.set('username', username, {
 		path: '/',
 		sameSite: 'lax',
 		secure: false,
@@ -33,12 +33,8 @@ export function setUserDataCookie(cookies: Cookies, userData: Record<string, unk
 	});
 }
 
-export function getUserDataFromCookie(cookies: Cookies) {
-	const raw = cookies.get('userData');
+export function getUserNameFromCookie(cookies: Cookies) {
+	const raw = cookies.get('username');
 	if (!raw) return null;
-	try {
-		return JSON.parse(raw);
-	} catch {
-		return null;
-	}
+	return raw
 }

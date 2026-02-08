@@ -1,18 +1,18 @@
 import type { Handle } from '@sveltejs/kit';
-import { getUserDataFromCookie, getJwt } from '$lib/server/auth';
+import { getUserNameFromCookie, getJwt } from '$lib/server/auth';
 
 
 export const handle: Handle = async ({ event, resolve }) => {
-  const userData = getUserDataFromCookie(event.cookies);
+  const userData = getUserNameFromCookie(event.cookies);
   const jwt = getJwt(event.cookies)
 
-  event.locals.userData = userData;
-  event.locals.jwt = jwt
+  event.locals.username = userData;
+  event.locals.usertoken = jwt
 
   const protectedPrefixes = ['/edit'];
 
   const isProtected = protectedPrefixes.some((p) => event.url.pathname.startsWith(p));
-  if (isProtected && !event.locals?.jwt) {
+  if (isProtected && !event.locals?.usertoken) {
     return Response.redirect(new URL('/log-in', event.url), 303);
   }
 

@@ -2,9 +2,10 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import MyDarkmodeToggle from '$lib/components/my-darkmode-toggle.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { MenuIcon, Github, LogInIcon ,LogOutIcon } from 'lucide-svelte';
+	import { MenuIcon, Github, LogInIcon, LogOutIcon } from 'lucide-svelte';
 
 	import { appConfig } from '$lib/constants';
 	let { children, data } = $props();
@@ -28,18 +29,36 @@
 
 			<div class="flex items-center gap-6">
 				<MyDarkmodeToggle></MyDarkmodeToggle>
-				{#if data.userData?.username }
-					<Button variant="outline" size="icon" href="/log-out">
-					<LogOutIcon />
-					<span class="sr-only">Log-out</span>
-				</Button>
+				{#if data.username}
+					<Tooltip.Provider delayDuration={0}>
+						<Tooltip.Root
+							><Tooltip.Trigger>
+								<Button variant="outline" size="icon" href="/log-out">
+									<LogOutIcon />
+									<span class="sr-only">Log-out</span>
+								</Button>
+							</Tooltip.Trigger>
+							<Tooltip.Content>
+								<p>Log out</p>
+							</Tooltip.Content>
+						</Tooltip.Root>
+					</Tooltip.Provider>
 				{:else}
-				<Button variant="outline" size="icon" href="/log-in">
-					<LogInIcon />
-					<span class="sr-only">Log-in</span>
-				</Button>
+					<Tooltip.Provider delayDuration={0}>
+						<Tooltip.Root
+							><Tooltip.Trigger>
+								<Button variant="outline" size="icon" href="/log-in">
+									<LogInIcon />
+									<span class="sr-only">Log-in</span>
+								</Button>
+							</Tooltip.Trigger>
+							<Tooltip.Content>
+								<p>Log in</p>
+							</Tooltip.Content>
+						</Tooltip.Root>
+					</Tooltip.Provider>
 				{/if}
-				
+
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger class="md:hidden">
 						{#snippet child({ props })}
