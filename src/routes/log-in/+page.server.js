@@ -8,23 +8,31 @@ export const actions = {
 		const data = await request.formData();
 		const username = data.get('username');
 		const password = data.get('password');
-		const response = await fetch(appConfig.auth_url, {
-			method: 'POST',
-			headers: {
-				accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				username,
-				password
-			})
-		});
+		   let response;
+		   try {
+			   response = await fetch(appConfig.auth_url, {
+				   method: 'POST',
+				   headers: {
+					   accept: 'application/json',
+					   'Content-Type': 'application/json'
+				   },
+				   body: JSON.stringify({
+					   username,
+					   password
+				   })
+			   });
+		   } catch (error) {
+			   return fail(500, {
+				   message: 'Server error occurred. Please try again later.',
+				   error: error?.message || error
+			   });
+		   }
 
 		if (response.ok) {
 			const res = await response.json();
 			setJwt(cookies, res.token);
 			setUserName(cookies, username);
-			throw redirect(303, '/');
+			redirect(303, '/');
 		} else {
 			return fail(400, {
 				message: `Password for user ${username} did not match`
