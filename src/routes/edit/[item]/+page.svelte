@@ -18,12 +18,12 @@
 			<Pagination.Content>
 				<Pagination.Item>
 					<Pagination.Previous
-						onclick={() => {
+						onmouseenter={() => {
 							const params = new URLSearchParams(url.searchParams);
 							params.set('page', String(currentPage - 1));
 							preloadData(`${url.pathname}?${params}`);
 						}}
-						onmouseenter={() => {
+						onclick={() => {
 							const params = new URLSearchParams(url.searchParams);
 							params.set('page', String(currentPage - 1));
 							goto(`${url.pathname}?${params}`);
