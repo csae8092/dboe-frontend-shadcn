@@ -1,9 +1,43 @@
 <script lang="ts">
 	const { data } = $props();
 	import * as Table from '$lib/components/ui/table/index.js';
+	import * as Pagination from '$lib/components/ui/pagination/index.js'
+    import { page as pageStore } from '$app/state';
+	let url = $derived(pageStore.url);
+    let page_size = $derived(Number(url.searchParams.get('page_size') || '15'));
+    let items_total_count = $derived(data.payload.count)
+    import { goto } from '$app/navigation';
+
 </script>
 
 <h1 class="text-center text-3xl">{data.selectedItem.label}</h1>
+
+<div>
+	<Pagination.Root count={items_total_count} perPage={page_size}>
+		{#snippet children({ pages, currentPage })}
+			<Pagination.Content>
+				<Pagination.Item>
+					<Pagination.Previous
+						onclick={() => {
+							const params = new URLSearchParams(url.searchParams);
+							params.set('page', String(currentPage - 1));
+							goto(`${url.pathname}?${params}`);
+						}}
+					></Pagination.Previous>
+				</Pagination.Item>
+				<Pagination.Item>
+					<Pagination.Next
+						onclick={() => {
+							const params = new URLSearchParams(url.searchParams);
+							params.set('page', String(currentPage + 1));
+							goto(`${url.pathname}?${params}`);
+						}}
+					></Pagination.Next>
+				</Pagination.Item>
+			</Pagination.Content>
+		{/snippet}
+	</Pagination.Root>
+</div>
 
 <Table.Root>
 	<Table.Caption>{data.selectedItem.label}</Table.Caption>
