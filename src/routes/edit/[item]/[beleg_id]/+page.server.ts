@@ -2,7 +2,6 @@ import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { routeMapper } from '$lib/constants';
 import { getJwt } from '$lib/server/auth';
-import { fieldsToExclude } from '$lib/constants';
 
 export const actions: Actions = {
 	default: async ({ request, url, params, cookies }) => {
