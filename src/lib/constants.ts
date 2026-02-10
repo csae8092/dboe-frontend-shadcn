@@ -30,3 +30,7 @@ export const routeMapper = {
         href: "/edit/lautungen"
     }
 }
+
+export const fieldsToExclude = [
+    "url", "orig_xml"
+]

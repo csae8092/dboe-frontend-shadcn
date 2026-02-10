@@ -2,6 +2,7 @@
 	const { data } = $props();
 	import * as Table from '$lib/components/ui/table/index.js';
 	import * as Pagination from '$lib/components/ui/pagination/index.js';
+	import { fieldsToExclude } from '$lib/constants.js';
 	import { page as pageStore } from '$app/state';
 	let url = $derived(pageStore.url);
 	let page_size = $derived(Number(url.searchParams.get('page_size') || '15'));
@@ -49,26 +50,33 @@
 	</Pagination.Root>
 </div>
 
-<Table.Root>
-	<Table.Caption>{data.selectedItem.label}</Table.Caption>
-	<Table.Header>
-		<Table.Row>
-			{#each Object.keys(data.payload.results[0]) as x, i}
-				<Table.Head id={`th-id-${i}`}>{x}</Table.Head>
-			{/each}
-		</Table.Row>
-	</Table.Header>
-	<Table.Body>
-		{#each data.payload.results as row, i}
-			<Table.Row id={`tr-id-${i}`}>
-				{#each Object.entries(row) as [key, value], tdid}
-					{#if key === 'url'}
-						<Table.Cell id={`td-id-${tdid}`}><a href={String(value)}>{value}</a></Table.Cell>
-					{:else}
-						<Table.Cell id={`td-id-${tdid}`}>{value}</Table.Cell>
+{#if data.payload.results.length > 0}
+	<Table.Root>
+		<Table.Caption
+			>{data.payload.count} {data.selectedItem.label}
+		</Table.Caption>
+		<Table.Header>
+			<Table.Row>
+				{#each Object.keys(data.payload.results[0]) as x, i}
+					{#if !fieldsToExclude.includes(x)}
+						<Table.Head id={`th-id-${i}`}>{x}</Table.Head>
 					{/if}
 				{/each}
 			</Table.Row>
-		{/each}
-	</Table.Body>
-</Table.Root>
+		</Table.Header>
+		<Table.Body>
+			{#each data.payload.results as row, i}
+				<Table.Row id={`tr-id-${i}`}>
+					{#each Object.entries(row) as [key, value], tdid}
+						{#if key === 'id'}
+							<Table.Cell id={`td-id-${tdid}`}><a href={`${row.url}?format=json`}>{value}</a></Table.Cell>
+						{:else if !fieldsToExclude.includes(key)}
+							<Table.Cell id={`td-id-${tdid}`}>{value}</Table.Cell>
+						{/if}
+					{/each}
+				</Table.Row>
+			{/each}
+		</Table.Body>
+	</Table.Root>
+{/if}
+
