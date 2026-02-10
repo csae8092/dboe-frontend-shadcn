@@ -4,14 +4,12 @@ import { routeMapper } from '$lib/constants';
 import { getJwt } from '$lib/server/auth';
 
 export const actions: Actions = {
-	default: async ({ request, url, params, cookies }) => {
+	default: async ({ request, params, cookies }) => {
+		const referer = request.headers.get('referer') || '/';
 		const formData = await request.formData();
-        console.log(formData)
 		const payload = Object.fromEntries(formData.entries());
 		const jwt = getJwt(cookies);
 		const api_url = routeMapper[params.item as keyof typeof routeMapper].api_url;
-		console.log(`${api_url}${payload.id}`);
-
 		const response = await fetch(`${api_url}${payload.id}/`, {
 			method: 'PATCH',
 			headers: {
@@ -21,8 +19,6 @@ export const actions: Actions = {
 			},
 			body: JSON.stringify(payload)
 		});
-        console.log(response)
-		const referer = request.headers.get('referer') || '/';
 		throw redirect(303, referer);
 	}
 };
