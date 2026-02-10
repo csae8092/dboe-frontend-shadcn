@@ -10,21 +10,25 @@ export const appConfig = {
 
 export const routeMapper = {
     belege: {
+        id: "belege",
         label: "Belege",
         api_url: `${API_BASE_URL}api/belege-elastic-search/`,
         href: "/edit/belege"
     },
     bedeutungen: {
+        id: "bedeutungen",
         label: "Bedeutungen",
         api_url: `${API_BASE_URL}api/bedeutungen/`,
         href: "/edit/bedeutungen"
     },
     kontexte: {
+        id: "kontexte",
         label: "Kontexte",
         api_url: `${API_BASE_URL}api/kontexte/`,
         href: "/edit/kontexte"
     },
     lautungen: {
+        id: "lautungen",
         label: "Lautungen",
         api_url: `${API_BASE_URL}api/lautungen/`,
         href: "/edit/lautungen"

@@ -2,13 +2,14 @@
 	const { data } = $props();
 	import * as Table from '$lib/components/ui/table/index.js';
 	import * as Pagination from '$lib/components/ui/pagination/index.js';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import Button from '$lib/components/ui/button/button.svelte';
 	import { fieldsToExclude } from '$lib/constants.js';
 	import { page as pageStore } from '$app/state';
 	let url = $derived(pageStore.url);
 	let page_size = $derived(Number(url.searchParams.get('page_size') || '15'));
 	let items_total_count = $derived(data.payload.count);
 	import { goto, preloadData } from '$app/navigation';
-
 </script>
 
 <h1 class="text-center text-3xl">{data.selectedItem.label}</h1>
@@ -52,11 +53,12 @@
 
 {#if data.payload.results.length > 0}
 	<Table.Root>
-		<Table.Caption
-			>{data.payload.count} {data.selectedItem.label}
-		</Table.Caption>
+		<Table.Caption>{data.payload.count} {data.selectedItem.label}</Table.Caption>
 		<Table.Header>
 			<Table.Row>
+				{#if data.selectedItem.id === 'belege'}
+					<Table.Head id="edit-column" class="text-center">edit</Table.Head>
+				{/if}
 				{#each Object.keys(data.payload.results[0]) as x, i}
 					{#if !fieldsToExclude.includes(x)}
 						<Table.Head id={`th-id-${i}`}>{x}</Table.Head>
@@ -67,9 +69,34 @@
 		<Table.Body>
 			{#each data.payload.results as row, i}
 				<Table.Row id={`tr-id-${i}`}>
+					{#if data.selectedItem.id === 'belege'}
+						<Table.Cell>
+							<DropdownMenu.Root>
+								<DropdownMenu.Trigger>
+									{#snippet child({ props })}
+										<Button {...props} variant="outline">Open</Button>
+									{/snippet}
+								</DropdownMenu.Trigger>
+								<DropdownMenu.Content>
+									{#each Object.entries(data.routeMapper) as [key, value]}
+										{#if key != 'belege'}
+											<DropdownMenu.Item>
+												<a href={`${value.href}/${row.id}`}>
+													{value.label}
+												</a>
+											</DropdownMenu.Item>
+										{/if}
+									{/each}
+								</DropdownMenu.Content>
+							</DropdownMenu.Root>
+						</Table.Cell>
+					{/if}
 					{#each Object.entries(row) as [key, value], tdid}
 						{#if key === 'id'}
-							<Table.Cell id={`td-id-${tdid}`}><a class="underline decoration-dotted" href={`${row.url}?format=json`}>{value}</a></Table.Cell>
+							<Table.Cell id={`td-id-${tdid}`}
+								><a class="underline decoration-dotted" href={`${row.url}?format=json`}>{value}</a
+								></Table.Cell
+							>
 						{:else if !fieldsToExclude.includes(key)}
 							<Table.Cell id={`td-id-${tdid}`}>{value}</Table.Cell>
 						{/if}
@@ -79,4 +106,3 @@
 		</Table.Body>
 	</Table.Root>
 {/if}
-
