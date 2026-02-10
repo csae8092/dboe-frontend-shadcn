@@ -32,5 +32,5 @@ export const routeMapper = {
 }
 
 export const fieldsToExclude = [
-    "url", "orig_xml"
+    "url", "orig_xml", "number"
 ]

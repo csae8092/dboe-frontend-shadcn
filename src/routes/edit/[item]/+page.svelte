@@ -69,7 +69,7 @@
 				<Table.Row id={`tr-id-${i}`}>
 					{#each Object.entries(row) as [key, value], tdid}
 						{#if key === 'id'}
-							<Table.Cell id={`td-id-${tdid}`}><a href={`${row.url}?format=json`}>{value}</a></Table.Cell>
+							<Table.Cell id={`td-id-${tdid}`}><a class="underline decoration-dotted" href={`${row.url}?format=json`}>{value}</a></Table.Cell>
 						{:else if !fieldsToExclude.includes(key)}
 							<Table.Cell id={`td-id-${tdid}`}>{value}</Table.Cell>
 						{/if}

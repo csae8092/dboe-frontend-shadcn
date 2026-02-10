@@ -28,8 +28,8 @@
 			{#each data.payload.results as row, i}
 				<Table.Row id={`tr-id-${i}`}>
 					{#each Object.entries(row) as [key, value], tdid}
-						{#if key === 'url'}
-							<Table.Cell id={`td-id-${tdid}`}><a href={String(value)}>{value}</a></Table.Cell>
+						{#if key === 'id'}
+							<Table.Cell id={`td-id-${tdid}`}><a class="underline decoration-dotted" href={`${row.url}?format=json`}>{value}</a></Table.Cell>
 						{:else if !fieldsToExclude.includes(key)}
 							<Table.Cell id={`td-id-${tdid}`}>{value}</Table.Cell>
 						{/if}
