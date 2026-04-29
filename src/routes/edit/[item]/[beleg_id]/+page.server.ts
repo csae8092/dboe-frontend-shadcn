@@ -8,6 +8,14 @@ export const actions: Actions = {
 		const referer = request.headers.get('referer') || '/';
 		const formData = await request.formData();
 		const payload = Object.fromEntries(formData.entries());
+		const cleanedPayload = Object.fromEntries(
+			Object.entries(payload).filter(([, value]) => {
+				if (value == null) return false;
+				const normalized = String(value).trim().toLowerCase();
+				return normalized !== '' && normalized !== 'none' && normalized !== 'null' && normalized !== 'undefined';
+			})
+		);
+		
 		const jwt = getJwt(cookies);
 		const api_url = routeMapper[params.item as keyof typeof routeMapper].api_url;
 		const response = await fetch(`${api_url}${payload.id}/`, {
@@ -17,8 +25,16 @@ export const actions: Actions = {
 				'Content-Type': 'application/json',
 				Authorization: `Token ${jwt}`
 			},
-			body: JSON.stringify(payload)
+			body: JSON.stringify(cleanedPayload)
 		});
+		const responseBody = await response.text();
+		console.log('PATCH response', {
+			ok: response.ok,
+			status: response.status,
+			statusText: response.statusText,
+			body: responseBody
+		});
+		
 		throw redirect(303, referer);
 	}
 };
